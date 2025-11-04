@@ -1,0 +1,126 @@
+EXAMPLE 1 - Payment Plan Proposal:
+Context: Balance $1200, last payment 2025-06-01, overdue 90 days, policy allows 6-month installments
+User: "I can pay $200 now and then monthly payments"
+
+Response JSON:
+{
+  "action": "propose_plan",
+  "message_to_user": "Thank you for your willingness to resolve this account. I can set up a 6-month payment plan with $200 monthly payments starting November 10th, 2025. This would fully resolve your $1,200 balance. Would this arrangement work for you?",
+  "structured_plan": {
+    "type": "installment",
+    "amount": 200,
+    "installments": 6,
+    "first_due_date": "2025-11-10"
+  },
+  "confidence": 0.92,
+  "escalation": false,
+  "compliance_checks": ["verified_contact_time", "payment_plan_within_policy", "borrower_consent_confirmed"]
+}
+
+EXAMPLE 2 - Escalation Required:
+Context: User threatens legal action and demands full debt validation
+User: "This debt is not mine! I'm calling my lawyer and filing complaints with the CFPB!"
+
+Response JSON:
+{
+  "action": "escalate",
+  "message_to_user": "I understand your concerns about this account. I'm immediately connecting you with a specialist who can provide the debt validation documentation you're requesting. They will contact you within 48 hours with all required information. In the meantime, we'll pause all collection activities on this account.",
+  "structured_plan": null,
+  "confidence": 0.98,
+  "escalation": true,
+  "compliance_checks": ["debt_validation_requested", "legal_threat_documented", "collection_pause_initiated"]
+}
+
+EXAMPLE 3 - Identity Verification:
+Context: New conversation, borrower identity not yet verified
+User: "What's my balance?"
+
+Response JSON:
+{
+  "action": "verify_identity",
+  "message_to_user": "I'd be happy to help you with your account information. For security purposes, I need to verify your identity first. Can you please provide the last 4 digits of your Social Security Number and the amount of your last payment?",
+  "structured_plan": null,
+  "confidence": 0.95,
+  "escalation": false,
+  "compliance_checks": ["identity_verification_required", "pii_protection_maintained"]
+}
+
+EXAMPLE 4 - Settlement Offer:
+Context: Balance $2000, account 180+ days overdue, borrower offers lump sum
+User: "I can pay $1000 right now to settle this completely"
+
+Response JSON:
+{
+  "action": "propose_plan",
+  "message_to_user": "Thank you for your settlement offer. I can accept $1,400 as a full settlement of your $2,000 balance (70% settlement per our policy). This would completely resolve the account. If you agree, I can send you a secure payment link to process this today. Would you like to proceed?",
+  "structured_plan": {
+    "type": "settlement",
+    "amount": 1400,
+    "installments": null,
+    "first_due_date": "2025-11-05"
+  },
+  "confidence": 0.88,
+  "escalation": false,
+  "compliance_checks": ["settlement_within_policy", "written_agreement_required", "payment_processing_secure"]
+}
+
+EXAMPLE 5 - Financial Hardship:
+Context: Borrower expresses financial distress
+User: "I lost my job and can't afford anything right now. I'm barely keeping my lights on."
+
+Response JSON:
+{
+  "action": "escalate",
+  "message_to_user": "I understand you're going through a difficult time, and I want to make sure you get the help you need. Let me connect you with one of our financial hardship specialists who can discuss options that might work better for your current situation. They have additional programs available that I cannot offer.",
+  "structured_plan": null,
+  "confidence": 0.95,
+  "escalation": true,
+  "compliance_checks": ["financial_hardship_identified", "empathetic_response_provided", "specialist_referral_initiated"]
+}
+
+EXAMPLE 6 - Opt-Out Request:
+Context: Borrower requests to stop communications
+User: "Stop calling me! I don't want any more contact about this debt!"
+
+Response JSON:
+{
+  "action": "escalate",
+  "message_to_user": "I understand and will honor your request to stop communications. I'm immediately updating your contact preferences to opt you out of further automated contacts. A specialist will send you written confirmation of this request within 5 business days. Please note that this does not eliminate the debt, but we will cease collection communications as requested.",
+  "structured_plan": null,
+  "confidence": 1.0,
+  "escalation": true,
+  "compliance_checks": ["opt_out_request_honored", "written_confirmation_required", "legal_rights_preserved"]
+}
+
+EXAMPLE 7 - Payment Processing:
+Context: Identity verified, borrower ready to make payment
+User: "I want to pay $500 right now with my credit card"
+
+Response JSON:
+{
+  "action": "collect_payment",
+  "message_to_user": "Excellent! I can process your $500 payment immediately. I'll send you a secure payment link where you can safely enter your credit card information. This payment will reduce your balance from $1,200 to $700. The link will expire in 15 minutes for security. Would you like me to send that now?",
+  "structured_plan": {
+    "type": "one_time",
+    "amount": 500,
+    "installments": null,
+    "first_due_date": "2025-11-04"
+  },
+  "confidence": 0.96,
+  "escalation": false,
+  "compliance_checks": ["identity_verified", "secure_payment_processing", "balance_update_calculated"]
+}
+
+EXAMPLE 8 - Dispute Handling:
+Context: Borrower disputes the debt amount
+User: "I never borrowed $2000. My records show it should only be $1500."
+
+Response JSON:
+{
+  "action": "escalate",
+  "message_to_user": "I understand you're disputing the amount owed. This is an important matter that requires careful review of your account history and documentation. I'm connecting you with a specialist who can thoroughly investigate your account and provide detailed documentation of all charges and payments. They will contact you within 24 hours to begin this review process.",
+  "structured_plan": null,
+  "confidence": 0.92,
+  "escalation": true,
+  "compliance_checks": ["dispute_documented", "account_review_initiated", "specialist_assignment_required"]
+}
